@@ -1,0 +1,177 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title th:text="${pageTitle} + ' — Rated'">Rated</title>
+
+    <!-- Bootstrap and our custom stylesheet -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+
+    <!-- Navigation bar -->
+    <header class="topbar">
+        <div class="container topbar-inner">
+
+            <!-- Custom Rated logo -->
+            <a class="logo" th:href="@{/}" aria-label="Rated Home">
+                <img th:src="@{/images/rated-logo.png}"
+                     alt="Rated"
+                     height="40"
+                     style="display:block; width:auto; max-width:170px; object-fit:contain;">
+            </a>
+
+            <a class="subtle-link" th:href="@{/}">
+                Back to Library
+            </a>
+
+        </div>
+    </header>
+
+    <main class="container page-content narrow">
+
+        <!-- Page title changes between Add and Edit -->
+        <h1 th:text="${pageTitle}">Add Entry</h1>
+
+        <div class="form-panel">
+
+            <!-- Save a new entry or update an existing one -->
+            <form th:action="@{/entries/save}"
+                  th:object="${entry}"
+                  method="post">
+
+                <!-- Keeps track of the entry when editing -->
+                <input type="hidden" th:field="*{mediaId}">
+
+                <div class="row g-3">
+
+                    <!-- Title -->
+                    <div class="col-12">
+                        <label class="form-label" for="title">Title *</label>
+
+                        <input id="title"
+                               class="form-control"
+                               type="text"
+                               th:field="*{title}"
+                               maxlength="150"
+                               required
+                               placeholder="Enter the title">
+
+                        <small class="form-error"
+                               th:if="${#fields.hasErrors('title')}"
+                               th:errors="*{title}"></small>
+                    </div>
+
+                    <!-- Media type -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="mediaType">Media Type *</label>
+
+                        <select id="mediaType"
+                                class="form-select"
+                                th:field="*{mediaType}"
+                                required>
+
+                            <option value="">Select a type</option>
+                            <option value="Movie">Movie</option>
+                            <option value="TV Show">TV Show</option>
+                            <option value="Music Album">Music Album</option>
+
+                        </select>
+
+                        <small class="form-error"
+                               th:if="${#fields.hasErrors('mediaType')}"
+                               th:errors="*{mediaType}"></small>
+                    </div>
+
+                    <!-- Rating -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="rating">Rating (1–10) *</label>
+
+                        <input id="rating"
+                               class="form-control"
+                               type="number"
+                               th:field="*{rating}"
+                               min="1"
+                               max="10"
+                               required
+                               placeholder="1–10">
+
+                        <small class="form-error"
+                               th:if="${#fields.hasErrors('rating')}"
+                               th:errors="*{rating}"></small>
+                    </div>
+
+                    <!-- Creator -->
+                    <div class="col-12">
+                        <label class="form-label" for="creator">Creator</label>
+
+                        <input id="creator"
+                               class="form-control"
+                               type="text"
+                               th:field="*{creator}"
+                               maxlength="150"
+                               placeholder="Director, artist, or creator">
+                    </div>
+
+                    <!-- Release year -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="releaseYear">Release Year</label>
+
+                        <input id="releaseYear"
+                               class="form-control"
+                               type="number"
+                               th:field="*{releaseYear}"
+                               placeholder="2026">
+                    </div>
+
+                    <!-- Date finished -->
+                    <div class="col-12 col-md-6">
+                        <label class="form-label" for="dateConsumed">Date Finished</label>
+
+                        <input id="dateConsumed"
+                               class="form-control"
+                               type="date"
+                               th:field="*{dateConsumed}">
+                    </div>
+
+                    <!-- Review -->
+                    <div class="col-12">
+                        <label class="form-label" for="review">Review / Notes</label>
+
+                        <textarea id="review"
+                                  class="form-control"
+                                  rows="5"
+                                  th:field="*{review}"
+                                  placeholder="What did you think?"></textarea>
+                    </div>
+
+                </div>
+
+                <!-- Form actions -->
+                <div class="form-actions">
+
+                    <button class="button-primary" type="submit">
+                        Save Entry
+                    </button>
+
+                    <a class="button-secondary" th:href="@{/}">
+                        Cancel
+                    </a>
+
+                </div>
+
+            </form>
+        </div>
+
+    </main>
+
+</body>
+</html>

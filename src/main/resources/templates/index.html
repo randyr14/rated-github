@@ -1,0 +1,141 @@
+
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+
+    <title>Rated — My Library</title>
+
+    <!-- Bootstrap for the page layout -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <!-- Our website styling -->
+    <link rel="stylesheet" th:href="@{/css/styles.css}">
+</head>
+
+<body>
+
+    <!-- Navigation bar -->
+    <header class="topbar">
+        <div class="container topbar-inner">
+
+            <!-- Custom Rated logo -->
+            <a class="logo" th:href="@{/}" aria-label="Rated Home">
+                <img th:src="@{/images/rated-logo.png}"
+                     alt="Rated"
+                     height="40"
+                     style="display:block; width:auto; max-width:170px; object-fit:contain;">
+            </a>
+
+            <a class="button-primary" th:href="@{/entries/add}">
+                + Add Entry
+            </a>
+
+        </div>
+    </header>
+
+    <main class="container page-content">
+
+        <!-- Library heading -->
+        <div class="intro">
+            <h1>My Library</h1>
+        </div>
+
+        <!-- Filter entries by media type -->
+        <nav class="filters" aria-label="Media filters">
+
+            <a th:href="@{/}"
+               th:classappend="${selectedType == 'All'} ? 'active' : ''">
+                All
+            </a>
+
+            <a th:href="@{/(type='Movie')}"
+               th:classappend="${selectedType == 'Movie'} ? 'active' : ''">
+                Movies
+            </a>
+
+            <a th:href="@{/(type='TV Show')}"
+               th:classappend="${selectedType == 'TV Show'} ? 'active' : ''">
+                TV Shows
+            </a>
+
+            <a th:href="@{/(type='Music Album')}"
+               th:classappend="${selectedType == 'Music Album'} ? 'active' : ''">
+                Albums
+            </a>
+
+        </nav>
+
+        <!-- Show a message if the library is empty -->
+        <div class="empty-card" th:if="${#lists.isEmpty(entries)}">
+
+            <h2>No entries yet</h2>
+
+            <p>Add your first movie, TV show, or album to get started.</p>
+
+            <a class="button-primary" th:href="@{/entries/add}">
+                + Add Entry
+            </a>
+
+        </div>
+
+        <!-- Display saved entries -->
+        <div class="row g-3" th:unless="${#lists.isEmpty(entries)}">
+
+            <div class="col-12 col-md-6 col-lg-4"
+                 th:each="entry : ${entries}">
+
+                <article class="media-card h-100">
+
+                    <!-- Media category and rating -->
+                    <div class="card-head">
+
+                        <span class="type-pill"
+                              th:classappend="${entry.mediaType == 'Movie' ? 'type-movie' : (entry.mediaType == 'TV Show' ? 'type-tv' : 'type-album')}"
+                              th:text="${entry.mediaType}">
+                            Movie
+                        </span>
+
+                        <span class="score">
+                            <strong th:text="${entry.rating}">9</strong>/10
+                        </span>
+
+                    </div>
+
+                    <!-- Entry title and creator -->
+                    <a class="card-title"
+                       th:href="@{/entries/{id}(id=${entry.mediaId})}"
+                       th:text="${entry.title}">
+                        Title
+                    </a>
+
+                    <p class="card-meta"
+                       th:text="${entry.creator != null and !entry.creator.isBlank() ? entry.creator : 'No creator listed'}">
+                        Creator
+                    </p>
+
+                    <!-- Entry actions -->
+                    <div class="card-footer-actions">
+
+                        <a th:href="@{/entries/{id}(id=${entry.mediaId})}">
+                            View Details
+                        </a>
+
+                        <a th:href="@{/entries/{id}/edit(id=${entry.mediaId})}">
+                            Edit
+                        </a>
+
+                    </div>
+
+                </article>
+
+            </div>
+        </div>
+
+    </main>
+
+</body>
+</html>
